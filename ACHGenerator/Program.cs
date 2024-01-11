@@ -27,8 +27,10 @@ namespace ACHGenerator
         public ACHGenOptions() { }
         [Option('o', "output", HelpText = "Output CSV File", Required = true)]
         public string Output { get; set; }
-        [Option('d', "date", HelpText = "Check Date", Required = true)]
-        public DateTime CheckDate { get; set; }
+        [Option('s', "start", HelpText = "Start Date", Required = true)]
+        public DateTime Start { get; set; }
+        [Option('e', "end", HelpText = "End Date", Required = true)]
+        public DateTime End { get; set; }
     }
 
     [Verb("init", HelpText = "Initial QB File with Fields required")]
@@ -106,8 +108,8 @@ namespace ACHGenerator
                 Console.WriteLine(status.GetFormattedMessage());
                 if (status.Code == ErrorCode.ConnectQBOK)
                 {
-                    Console.WriteLine($"Fetching Bill Payments for {opts.CheckDate:d}..."); 
-                    Status<ObservableCollection<BillPayment>> fetchstatus = await qbconnector.FetchBillPayments(opts.CheckDate, opts.CheckDate);
+                    Console.WriteLine($"Fetching Bill Payments for {opts.Start:d} through {opts.End:d}..."); 
+                    Status<ObservableCollection<BillPayment>> fetchstatus = await qbconnector.FetchBillPayments(opts.Start, opts.End);
                     Console.WriteLine($"Result: {fetchstatus.GetFormattedMessage()}");
                     if ((fetchstatus.Code == ErrorCode.SavetoQBOK) && (fetchstatus.ReturnObject?.Count > 0))
                     {
@@ -123,7 +125,7 @@ namespace ACHGenerator
                                 if (payment.ACHActive == true)
                                 {
                                     //Console.WriteLine($"{payment.PayeeType},N,{payment.PayeeName},{payment.PayeeRoutingNum:9},{payment.PayeeAccountNum:34},{payment.PayeeAccountType:1},{payment.PaymentDate:d},{payment.PaymentAmount:F2},C,{payment.PayeeNote:80}");
-                                    sw.WriteLine($"{payment.PayeeType},N,{payment.PayeeName},{payment.PayeeRoutingNum:9},{payment.PayeeAccountNum:34},{payment.PayeeAccountType:1},{payment.PaymentDate:d},{payment.PaymentAmount:F2},C,{payment.PayeeNote:80}");
+                                    sw.WriteLine($"{payment.PayeeType},{BillPayment.PayeePrivacy},{payment.PayeeName},{payment.PayeeRoutingNum:9},{payment.PayeeAccountNum:34},{payment.PayeeAccountType:1},{payment.PaymentDate:MM/dd/yyyy},{payment.PaymentAmount:F2},{BillPayment.CreditDebit},{payment.PayeeNote:80}");
                                     Console.Write(".");
                                 }
                             }

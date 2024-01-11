@@ -22,6 +22,7 @@ namespace ACHGenerator
     public class BillPayment
     {
         public string VendorListID { get; set; }
+        public string BankRefListID { get; set; }
         public string PaymentTxnId { get; set; }
         public string PaymentEditSeq { get; set; }
         public string PayeeName { get; set; }

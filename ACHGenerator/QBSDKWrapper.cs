@@ -79,6 +79,7 @@ namespace ACHGenerator
                 IBillPaymentCheckQuery billPaymentReq = requestSet.AppendBillPaymentCheckQueryRq();
                 billPaymentReq.ORTxnQuery.TxnFilter.ORDateRangeFilter.TxnDateRangeFilter.ORTxnDateRangeFilter.TxnDateFilter.FromTxnDate.SetValue(start);
                 billPaymentReq.ORTxnQuery.TxnFilter.ORDateRangeFilter.TxnDateRangeFilter.ORTxnDateRangeFilter.TxnDateFilter.FromTxnDate.SetValue(end);
+                
                 billPaymentReq.IncludeLineItems.SetValue(true);
 
 
@@ -339,7 +340,7 @@ namespace ACHGenerator
             }
             catch (Exception except)
             {
-                log.Error("fetchBillPayments", except);
+                log.Error("UpdateBillPayments", except);
                 return new Status(except.Message, ErrorCode.SaveToQBError, 0);
             }
 
